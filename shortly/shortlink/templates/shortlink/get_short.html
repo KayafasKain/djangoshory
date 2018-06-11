@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'shortlink/css/global.css' %} ">
+</head>
+<body>
+    <div class = "formcont">
+        <div class="box">
+            <a href="/{{ link.id }}">127.0.0.1:8000/{{ link.id }}</a>
+        </div>
+    </div>
+</body>
+</html>
+

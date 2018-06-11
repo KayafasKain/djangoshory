@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+<head>
+    <link rel="stylesheet" href="{% static 'shortlink/css/global.css' %} ">
+</head>
+<body>
+    <div class = "formcont">
+        <div class="box">
+            <form action="/create" method="POST">
+                <span>Enter the link</span><br>
+                {% csrf_token %}
+                <input type="text" name="fulllink">
+                <br><input type="submit" value="submit">
+            </form>
+
+            <ul>
+                {% if tops %}
+                    {% for top in tops %}
+                        <li>
+                            <a href="{{ top.id }}">127.0.0.1:8000/{{ top.id }}</a>
+                            <span> visited: {{ top.visited }}</span>
+                        </li>
+                    {% endfor %}
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
