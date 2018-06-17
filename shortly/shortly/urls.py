@@ -14,15 +14,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-
 from django.urls import path
+from django.conf.urls import include, url
+from django.conf import settings
 from shortlink import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', views.index),
-    path('/', views.index),
-    path('create', views.make_short_link),
-    path('short/<str:pk>', views.get_short),
-    path('<str:pk>', views.follow_short),
+    path('', views.main, name='main'),
+    path('short/<str:pk>', views.link_detail, name='link-detail'),
+    path('<str:pk>', views.follow_short, name='follow-short'),
 ]
+
+# if settings.DEBUG:
+#     import debug_toolbar
+#     urlpatterns = [
+#         url(r'^__debug__/', include(debug_toolbar.urls)),
+#     ] + urlpatterns
