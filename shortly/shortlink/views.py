@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect,
+from django.shortcuts import render, redirect
 from .forms import CreateLinkModelForm
 from django.views.generic import ListView, DetailView, RedirectView
 from .models import Link
@@ -37,6 +37,7 @@ class ShortLinkDetail(DetailView):
     template_name = 'shortlink/get_short.html'
     model = Link
 
+    #All these is already done by default, so my versino does not required
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         print(self.kwargs['pk'])
