@@ -5,9 +5,6 @@ from django.views.generic import ListView, DetailView, RedirectView
 from django.views.generic.edit import FormView
 from .models import Link
 
-
-# Split main page view into two views: form view and list view
-# make another view to handle POST requests makeanother url/create
 class MainPage(ListView):
     model = Link
     template_name = 'shortlink/index.html'
@@ -26,6 +23,7 @@ main = MainPage.as_view()
 
 class FormHandle(FormView):
     model = Link
+    context_object_name = 'link-create'
     template_name = 'shortlink/index.html'
     form_class = CreateLinkModelForm
 
@@ -43,14 +41,6 @@ class FormHandle(FormView):
         context = super().get_context_data(**kwargs)
         context['object_list'] = self.model.objects.all().order_by('-visited')[:5]
         return context
-
-    # def post(self, request, *args, **kwargs):
-    #     form = CreateLinkModelForm(request.POST)
-    #     if form.is_valid():
-
-    #
-    #         return redirect('/short/' + str(link.pk))
-    #     return redirect('/')
 
 form_handle = FormHandle.as_view()
 
