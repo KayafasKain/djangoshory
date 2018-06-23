@@ -7,7 +7,7 @@
 <body>
     <div class = "formcont">
         <div class="box">
-            <form action="" method="POST">
+            <form action="create/" method="POST">
                 {% csrf_token %}
                 {% for field in form%}
                     <div class="wrapper">
@@ -26,14 +26,14 @@
             </form>
 
             <ul>
-                {% if tops %}
-                    {% for top in tops %}
+
+                    {% for top in object_list %}
                         <li>
                             <a href="{{ top.pk }}">127.0.0.1:8000/{{ top.pk }}</a>
                             <span> visited: {{ top.visited }}</span>
                         </li>
                     {% endfor %}
-                {% endif %}
+
             </ul>
         </div>
     </div>

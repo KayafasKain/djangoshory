@@ -22,6 +22,7 @@ from shortlink import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.main, name='main'),
+    path('create/', views.form_handle),
     path('short/<str:pk>', views.link_detail, name='link-detail'),
     path('<str:pk>', views.follow_short, name='follow-short'),
 ]

@@ -1,37 +1,58 @@
 from django.shortcuts import render, redirect
 from .forms import CreateLinkModelForm
+from django.urls import reverse
 from django.views.generic import ListView, DetailView, RedirectView
+from django.views.generic.edit import FormView
 from .models import Link
 
+
+# Split main page view into two views: form view and list view
+# make another view to handle POST requests makeanother url/create
 class MainPage(ListView):
     model = Link
     template_name = 'shortlink/index.html'
     context_object_name = 'main'
     form_class = CreateLinkModelForm
 
-    def post(self, request, *args, **kwargs):
-        tops = self.model.objects.all().order_by('-visited')[:5]
-        form = CreateLinkModelForm(request.POST)
-        if form.is_valid():
-            try:
-                link = self.model.objects.get(basic_link=request.POST.get('basic_link'))
-            except self.model.DoesNotExist as e:
-                link = form.save(commit=True)
-                link.save()
-
-            return redirect('/short/' + str(link.pk))
-        return render(request, 'shortlink/index.html', {
-            'form': form,
-            'tops': tops
-        })
+    def get_queryset(self):
+        return self.model.objects.all().order_by('-visited')[:5]
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['tops'] = self.model.objects.all().order_by('-visited')[:5]
         context['form'] = self.form_class
         return context
 
 main = MainPage.as_view()
+
+class FormHandle(FormView):
+    model = Link
+    template_name = 'shortlink/index.html'
+    form_class = CreateLinkModelForm
+
+    def get_success_url(self):
+        return redirect('/short/' + str(link.pk))
+
+    def form_valid(self, form):
+        try:
+            link = self.model.objects.get(basic_link=form.cleaned_data['basic_link'])
+        except self.model.DoesNotExist as e:
+            link = form.save()
+        return redirect(reverse('link-detail', kwargs = { 'pk': str(link.pk)} ))
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_list'] = self.model.objects.all().order_by('-visited')[:5]
+        return context
+
+    # def post(self, request, *args, **kwargs):
+    #     form = CreateLinkModelForm(request.POST)
+    #     if form.is_valid():
+
+    #
+    #         return redirect('/short/' + str(link.pk))
+    #     return redirect('/')
+
+form_handle = FormHandle.as_view()
 
 class ShortLinkDetail(DetailView):
     template_name = 'shortlink/get_short.html'
